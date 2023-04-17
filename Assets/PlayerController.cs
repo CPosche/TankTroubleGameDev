@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private GameObject muzzle;
     public float moveSpeed = 5f;
     public float rotationSpeed = 100f;
 
     private Transform _tankTransform;
+    private TankController _tankController;
     void Start()
     {
         _tankTransform = GetComponent<Transform>();
+        _tankController = GetComponent<TankController>();
     }
     
     void Update()
@@ -28,6 +29,11 @@ public class PlayerController : MonoBehaviour
 
         float rotation = -horizontal * rotationSpeed * Time.deltaTime;
         _tankTransform.Rotate(0, 0, rotation);
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _tankController.Shoot();
+        }
         
     }
 }
