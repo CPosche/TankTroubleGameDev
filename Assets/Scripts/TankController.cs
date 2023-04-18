@@ -18,10 +18,12 @@ public class TankController : MonoBehaviour
     private TankController _tankController;
     private PhotonView _photonView;
     private GameObject _tankHouse;
+    private Animator _tankAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
+        _tankAnimator = GetComponent<Animator>();
         _tankHouse = transform.GetChild(0).gameObject;
         _photonView = GetComponent<PhotonView>();
         _tankTransform = GetComponent<Transform>();
@@ -41,6 +43,16 @@ public class TankController : MonoBehaviour
 
         var rotation = -horizontal * rotationSpeed * Time.deltaTime;
         _tankTransform.Rotate(0, 0, rotation);
+        
+        // if tank is moving then play the animation
+        if (horizontal != 0 || vertical != 0)
+        {
+            _tankAnimator.SetBool("isDriving", true);
+        }
+        else
+        {
+            _tankAnimator.SetBool("isDriving", false);
+        }
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -69,16 +81,6 @@ public class TankController : MonoBehaviour
             if (_bullets[i] != null) continue;
             _bullets[i] = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
             break;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Wall"))
-        {
-            Debug.Log(other.gameObject.name + " was hit by " + name);
-            // reset tank to previous position
-            _tankTransform.position -= _tankTransform.right * (moveSpeed * Time.deltaTime) * 2;
         }
     }
 }
