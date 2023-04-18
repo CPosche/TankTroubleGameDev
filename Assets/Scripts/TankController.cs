@@ -10,6 +10,7 @@ public class TankController : MonoBehaviour
 {
     
     [SerializeField] private GameObject muzzle;
+    [SerializeField] private GameObject smoke;
     public int numberOfBullets = 5;
     // private readonly GameObject[] _bullets = new GameObject[5];
     private List<GameObject> _bullets = new List<GameObject>();
@@ -25,7 +26,7 @@ public class TankController : MonoBehaviour
     private Animator _tankAnimator;
     [SerializeField] private TMP_Text bulletText;
     public Image[] bulletImages;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -95,6 +96,8 @@ public class TankController : MonoBehaviour
     private void Shoot()
     {
         if (_bullets.Count >= numberOfBullets) return;
+        var smokeEffect = Instantiate(smoke, muzzle.transform.position, muzzle.transform.rotation);
+        Destroy(smokeEffect, 1f);
         var bullet = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;

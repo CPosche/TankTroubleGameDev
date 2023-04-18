@@ -439,6 +439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   muzzle: {fileID: 605461511299822128}
+  smoke: {fileID: 2475890731830672360, guid: a916e854a7d288c4f8f2673108939596, type: 3}
   numberOfBullets: 5
   bulletPrefab: {fileID: 5655848743006156107, guid: 11e5e437930dc1e4f9511b2b72420d85, type: 3}
   moveSpeed: 3
