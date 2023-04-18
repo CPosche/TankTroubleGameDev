@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TankController : MonoBehaviour
 {
@@ -24,7 +24,8 @@ public class TankController : MonoBehaviour
     private GameObject _tankHouse;
     private Animator _tankAnimator;
     [SerializeField] private TMP_Text bulletText;
-
+    public Image[] bulletImages;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -86,6 +87,7 @@ public class TankController : MonoBehaviour
             {
                 _bullets.RemoveAt(i);
                 bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
+                bulletImages[(numberOfBullets - _bullets.Count) - 1].enabled = true;
             }
         }
     }
@@ -96,6 +98,7 @@ public class TankController : MonoBehaviour
         var bullet = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
+        bulletImages[numberOfBullets - _bullets.Count].enabled = false;
     }
     
     // on destroy play animation and destroy the tank
