@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
@@ -36,13 +37,15 @@ public class BulletController : MonoBehaviour
         }
     }
 
-    private void CalculateNewDirection(Collider2D surfaceHit)
+    private void CalculateNewDirection([NotNull] Collider2D surfaceHit)
     {
+        if (surfaceHit == null) throw new ArgumentNullException(nameof(surfaceHit));
         Vector2 normal = surfaceHit.transform.right;
         Vector2 direction = transform.right;
         Vector2 reflection = Vector2.Reflect(direction, normal);
         float angle = Mathf.Atan2(reflection.y, reflection.x) * Mathf.Rad2Deg;
         _transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        _direction = reflection;
 
         // Correct bullet position to avoid getting stuck in the wall
         //var correction = surfaceHit.contacts[0].point - (Vector2)_transform.position;
