@@ -10,14 +10,16 @@ public class BulletController : MonoBehaviour
     public float bulletSpeed = 2f;
     public float bulletLifeTime = 5f;
     private Transform _transform;
+    private Animation _animation;
 
     private void Awake()
     {
-        Destroy(gameObject, bulletLifeTime);
+        StartCoroutine(FadeOut(bulletLifeTime));
     }
     private void Start()
     {
         _transform = GetComponent<Transform>();
+        _animation = GetComponent<Animation>();
     }
 
     private void Update()
@@ -32,6 +34,11 @@ public class BulletController : MonoBehaviour
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
             CalculateNewDirection(other);    
+        } else if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log(other.gameObject.name + " was hit by " + name);
+            Destroy(other.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -43,6 +50,14 @@ public class BulletController : MonoBehaviour
         var reflection = Vector2.Reflect(direction, normal) * -1;
         var angle = Mathf.Atan2(reflection.y, reflection.x) * Mathf.Rad2Deg;
         _transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    }
+
+    private IEnumerator FadeOut(float time)
+    {
+        yield return new WaitForSeconds(time);
+        _animation.Play("FadeOut");
+        yield return new WaitForSeconds(0.6f);
+        Destroy(gameObject);
     }
     
 }
