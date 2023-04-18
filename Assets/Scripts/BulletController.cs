@@ -10,8 +10,7 @@ public class BulletController : MonoBehaviour
     public float bulletSpeed = 2f;
     public float bulletLifeTime = 5f;
     private Transform _transform;
-    private Vector3 _direction;
-    
+
     private void Awake()
     {
         Destroy(gameObject, bulletLifeTime);
@@ -19,12 +18,11 @@ public class BulletController : MonoBehaviour
     private void Start()
     {
         _transform = GetComponent<Transform>();
-        _direction = transform.right;
     }
 
     private void Update()
     {
-        _transform.position += _direction * (bulletSpeed * Time.deltaTime);
+        _transform.position += _transform.right * (bulletSpeed * Time.deltaTime);
     }
     
     private void OnTriggerEnter2D(Collider2D other)
@@ -40,16 +38,11 @@ public class BulletController : MonoBehaviour
     private void CalculateNewDirection([NotNull] Collider2D surfaceHit)
     {
         if (surfaceHit == null) throw new ArgumentNullException(nameof(surfaceHit));
-        Vector2 normal = surfaceHit.transform.right;
-        Vector2 direction = transform.right;
-        Vector2 reflection = Vector2.Reflect(direction, normal);
-        float angle = Mathf.Atan2(reflection.y, reflection.x) * Mathf.Rad2Deg;
+        var normal = surfaceHit.transform.right;
+        var direction = _transform.right;
+        var reflection = Vector2.Reflect(direction, normal) * -1;
+        var angle = Mathf.Atan2(reflection.y, reflection.x) * Mathf.Rad2Deg;
         _transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        _direction = reflection;
-
-        // Correct bullet position to avoid getting stuck in the wall
-        //var correction = surfaceHit.contacts[0].point - (Vector2)_transform.position;
-        //_transform.position += correction;
     }
     
 }
