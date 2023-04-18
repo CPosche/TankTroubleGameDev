@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TankController : MonoBehaviour
@@ -9,16 +11,19 @@ public class TankController : MonoBehaviour
     
     [SerializeField] private GameObject muzzle;
     public int numberOfBullets = 5;
-    private readonly GameObject[] _bullets = new GameObject[5];
+    // private readonly GameObject[] _bullets = new GameObject[5];
+    private List<GameObject> _bullets = new List<GameObject>();
     public GameObject bulletPrefab;
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 100f;
+    public float moveSpeed = 3f;
+    public float rotationSpeed = 200f;
+    public GameObject explosionPrefab;
 
     private Transform _tankTransform;
     private TankController _tankController;
     private PhotonView _photonView;
     private GameObject _tankHouse;
     private Animator _tankAnimator;
+    [SerializeField] private TMP_Text bulletText;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +33,7 @@ public class TankController : MonoBehaviour
         _photonView = GetComponent<PhotonView>();
         _tankTransform = GetComponent<Transform>();
         _tankController = GetComponent<TankController>();
+        bulletText.text = numberOfBullets + "/" + numberOfBullets;
     }
 
     // Update is called once per frame
@@ -72,15 +78,31 @@ public class TankController : MonoBehaviour
         {
             _tankHouse.transform.rotation = Quaternion.Euler(0, 0, _tankTransform.rotation.eulerAngles.z);
         }
+        
+        // check if object in the list is destroyed
+        for (int i = 0; i < _bullets.Count; i++)
+        {
+            if (_bullets[i] == null)
+            {
+                _bullets.RemoveAt(i);
+                bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
+            }
+        }
     }
 
     private void Shoot()
     {
-        for (var i = 0; i < numberOfBullets; i++)
-        {
-            if (_bullets[i] != null) continue;
-            _bullets[i] = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
-            break;
-        }
+        if (_bullets.Count >= numberOfBullets) return;
+        var bullet = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
+        _bullets.Add(bullet);
+        bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
+    }
+    
+    // on destroy play animation and destroy the tank
+    private void OnDestroy()
+    {
+        var explosion = Instantiate(explosionPrefab, _tankTransform.position, _tankTransform.rotation);
+        explosion.gameObject.GetComponent<Animator>().Play("tank_explosion");
+        Destroy(explosion, 1f);
     }
 }
