@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 1000833922525642784}
   - component: {fileID: 1000833922525642787}
   - component: {fileID: 8068029074743216573}
-  - component: {fileID: 971550484545445563}
+  - component: {fileID: 3438102308696818215}
   m_Layer: 0
   m_Name: tank_basic_black
   m_TagString: Untagged
@@ -250,7 +250,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.26, y: 1.04}
   m_EdgeRadius: 0
---- !u!114 &971550484545445563
+--- !u!114 &3438102308696818215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -259,9 +259,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000833922525642786}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6359fe9cf90e3149bd180ef5da66560, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cab64f2119e13040bb679563da536f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   muzzle: {fileID: 685135678665154168}
+  numberOfBullets: 5
+  bulletPrefab: {fileID: 5655848743006156107, guid: 11e5e437930dc1e4f9511b2b72420d85, type: 3}
   moveSpeed: 5
   rotationSpeed: 100

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class TankController : MonoBehaviour
@@ -7,40 +8,50 @@ public class TankController : MonoBehaviour
     
     [SerializeField] private GameObject muzzle;
     public int numberOfBullets = 5;
-    public float bulletSpeed = 10f;
-    public float bulletLifeTime = 10f;
-    private GameObject[] _bullets = new GameObject[5];
+    private readonly GameObject[] _bullets = new GameObject[5];
     public GameObject bulletPrefab;
+    public float moveSpeed = 5f;
+    public float rotationSpeed = 100f;
+
+    private Transform _tankTransform;
+    private TankController _tankController;
+    private PhotonView _photonView;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _photonView = GetComponent<PhotonView>();
+        _tankTransform = GetComponent<Transform>();
+        _tankController = GetComponent<TankController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < numberOfBullets; i++)
+        if (!_photonView.IsMine) return;
+        
+        var horizontal = Input.GetAxis("Horizontal");
+        var vertical = Input.GetAxis("Vertical");
+
+        var movement = _tankTransform.right * (vertical * moveSpeed * Time.deltaTime);
+        _tankTransform.position += movement;
+
+        var rotation = -horizontal * rotationSpeed * Time.deltaTime;
+        _tankTransform.Rotate(0, 0, rotation);
+        
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (_bullets[i] != null)
-            {
-                _bullets[i].GetComponent<Transform>().Translate(Vector2.right * (bulletSpeed * Time.deltaTime));
-            }
+            _tankController.Shoot();
         }
     }
-    
-    public void Shoot()
+
+    private void Shoot()
     {
-        for (int i = 0; i < numberOfBullets; i++)
+        for (var i = 0; i < numberOfBullets; i++)
         {
-            if (_bullets[i] == null)
-            {
-                _bullets[i] = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
-                _bullets[i].GetComponent<Transform>().Translate(Vector2.up * (bulletSpeed * Time.deltaTime));
-                Destroy(_bullets[i], bulletLifeTime);
-                break;
-            }
+            if (_bullets[i] != null) continue;
+            _bullets[i] = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
+            break;
         }
     }
 }
