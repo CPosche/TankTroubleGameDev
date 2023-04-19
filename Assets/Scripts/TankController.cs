@@ -12,7 +12,6 @@ public class TankController : MonoBehaviour
     [SerializeField] private GameObject muzzle;
     [SerializeField] private GameObject smoke;
     public int numberOfBullets = 5;
-    // private readonly GameObject[] _bullets = new GameObject[5];
     private List<GameObject> _bullets = new List<GameObject>();
     public GameObject bulletPrefab;
     public float moveSpeed = 3f;
@@ -26,12 +25,15 @@ public class TankController : MonoBehaviour
     private Animator _tankAnimator;
     [SerializeField] private TMP_Text bulletText;
     public Image[] bulletImages;
+    public Sprite[] ammoSprites;
+    private SpriteRenderer _tankHouseSpriteRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
         _tankAnimator = GetComponent<Animator>();
         _tankHouse = transform.GetChild(0).gameObject;
+        _tankHouseSpriteRenderer = _tankHouse.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
         _photonView = GetComponent<PhotonView>();
         _tankTransform = GetComponent<Transform>();
         _tankController = GetComponent<TankController>();
@@ -91,11 +93,20 @@ public class TankController : MonoBehaviour
                 bulletImages[(numberOfBullets - _bullets.Count) - 1].enabled = true;
             }
         }
+
+        _tankHouseSpriteRenderer.sprite = _bullets.Count switch
+        {
+            // check if bullets left is 0 then change sprite
+            0 => ammoSprites[0],
+            > 0 when _bullets.Count < numberOfBullets => ammoSprites[1],
+            _ => ammoSprites[2]
+        };
     }
 
     private void Shoot()
     {
         if (_bullets.Count >= numberOfBullets) return;
+        StartCoroutine(Recoil());
         var smokeEffect = Instantiate(smoke, muzzle.transform.position, muzzle.transform.rotation);
         Destroy(smokeEffect, 1f);
         var bullet = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
@@ -110,5 +121,12 @@ public class TankController : MonoBehaviour
         var explosion = Instantiate(explosionPrefab, _tankTransform.position, _tankTransform.rotation);
         explosion.gameObject.GetComponent<Animator>().Play("tank_explosion");
         Destroy(explosion, 1f);
+    }
+    
+    // move the tankhouse back a little to simulate recoil
+    private IEnumerator Recoil(){
+        _tankHouse.transform.position += _tankHouse.transform.right * -0.05f;
+        yield return new WaitForSeconds(0.1f);
+        _tankHouse.transform.position += _tankHouse.transform.right * 0.05f;
     }
 }

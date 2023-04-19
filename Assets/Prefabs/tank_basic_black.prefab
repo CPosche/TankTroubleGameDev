@@ -142,7 +142,7 @@ RectTransform:
   - {fileID: 735875353180225482}
   - {fileID: 4727727521729984703}
   m_Father: {fileID: 866576147469003881}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -323,7 +323,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6508898267585715630}
-  - {fileID: 5231901976737296885}
   - {fileID: 5742456324813577436}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -452,6 +451,10 @@ MonoBehaviour:
   - {fileID: 4382617712424680122}
   - {fileID: 4983445849925609046}
   - {fileID: 3202809552700819009}
+  ammoSprites:
+  - {fileID: 21300000, guid: 96d23c997a097014786d124fba229ed8, type: 3}
+  - {fileID: 21300000, guid: b3cdf3d894df5ae4fad01f14125f055a, type: 3}
+  - {fileID: 21300000, guid: 56462d9828390184d9d9382ac5bf717f, type: 3}
 --- !u!50 &8046743738491984498
 Rigidbody2D:
   serializedVersion: 4
@@ -611,7 +614,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b94e31296c8549b458b49b125d6d0f54, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 96d23c997a097014786d124fba229ed8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1613,34 +1616,3 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &9108311390647347984
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5231901976737296885}
-  m_Layer: 0
-  m_Name: GasSmoke
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5231901976737296885
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9108311390647347984}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.6, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 866576147469003881}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
