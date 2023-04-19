@@ -55,7 +55,8 @@ public class BulletController : MonoBehaviour
             Vector2 collisionPoint = other.ClosestPoint(_transform.position);
 
             // Calculate the normal vector based on the edge of the box if the collision point is close enough
-            float edgeThreshold = 0.05f;
+            float maxDistance = Mathf.Min(other.transform.lossyScale.x, other.transform.lossyScale.y, other.transform.lossyScale.z) / 2f;
+            float edgeThreshold = maxDistance * 0.2f; // Use 10% of the maxDistance as the edge threshold
             bool hitEdge = false;
             Vector2 normal = Vector2.zero;
             Vector2[] edges = GetEdges(other.gameObject);
