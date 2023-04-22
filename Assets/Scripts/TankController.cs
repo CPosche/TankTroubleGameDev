@@ -27,6 +27,7 @@ public class TankController : MonoBehaviour
     public Image[] bulletImages;
     public Sprite[] ammoSprites;
     private SpriteRenderer _tankHouseSpriteRenderer;
+    public AudioSource[] audioSources;
 
     // Start is called before the first frame update
     void Start()
@@ -58,10 +59,18 @@ public class TankController : MonoBehaviour
         if (horizontal != 0 || vertical != 0)
         {
             _tankAnimator.SetBool("isDriving", true);
+            if (audioSources[1].isPlaying == false)
+            {
+                audioSources[1].Play();
+            }
         }
         else
         {
             _tankAnimator.SetBool("isDriving", false);
+            if (audioSources[1].isPlaying)
+            {
+                audioSources[1].Stop();
+            }
         }
         
         if (Input.GetKeyDown(KeyCode.Space))
@@ -106,10 +115,11 @@ public class TankController : MonoBehaviour
     private void Shoot()
     {
         if (_bullets.Count >= numberOfBullets) return;
+        audioSources[0].Play();
         StartCoroutine(Recoil());
-        var smokeEffect = Instantiate(smoke, muzzle.transform.position, muzzle.transform.rotation);
-        Destroy(smokeEffect, 1f);
-        var bullet = Instantiate(bulletPrefab, muzzle.transform.position, muzzle.transform.rotation);
+        var smokeEffect = PhotonNetwork.Instantiate(smoke.name, muzzle.transform.position, muzzle.transform.rotation);
+        StartCoroutine(DestroySmoke(smoke));
+        var bullet = PhotonNetwork.Instantiate(bulletPrefab.name, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
         bulletImages[numberOfBullets - _bullets.Count].enabled = false;
@@ -118,7 +128,7 @@ public class TankController : MonoBehaviour
     // on destroy play animation and destroy the tank
     private void OnDestroy()
     {
-        var explosion = Instantiate(explosionPrefab, _tankTransform.position, _tankTransform.rotation);
+        var explosion = PhotonNetwork.Instantiate(explosionPrefab.name, _tankTransform.position, _tankTransform.rotation);
         explosion.gameObject.GetComponent<Animator>().Play("tank_explosion");
         Destroy(explosion, 1f);
     }
@@ -128,5 +138,11 @@ public class TankController : MonoBehaviour
         _tankHouse.transform.position += _tankHouse.transform.right * -0.05f;
         yield return new WaitForSeconds(0.1f);
         _tankHouse.transform.position += _tankHouse.transform.right * 0.05f;
+    }
+    
+    private IEnumerator DestroySmoke(GameObject Smoke)
+    {
+        yield return new WaitForSeconds(1f);
+        PhotonNetwork.Destroy(Smoke);
     }
 }
