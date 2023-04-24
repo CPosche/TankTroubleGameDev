@@ -11,7 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Lobby.unity
     guid: 6dc2ab8a2e88ae04c9bf36e31b488e79
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/FluffaScene.unity
     guid: f65f321a1fba6b94f91a21edef247e82
+  - enabled: 1
+    path: Assets/Scenes/MazeGenerator.unity
+    guid: 7a747f1f723780c479d96e85a0274d78
   m_configObjects: {}
