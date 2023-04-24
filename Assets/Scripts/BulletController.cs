@@ -38,7 +38,7 @@ public class BulletController : MonoBehaviour
         } else if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
-            PhotonNetwork.Destroy(other.gameObject);
+            other.gameObject.GetComponent<TankController>().TakeDamage();
             PhotonNetwork.Destroy(gameObject);
         }
     }
