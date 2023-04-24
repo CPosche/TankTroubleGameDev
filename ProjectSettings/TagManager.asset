@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Wall
   - Bullet
+  - BulletUp
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PostProcessing
   - Water
   - UI
   - 
