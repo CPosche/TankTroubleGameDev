@@ -38,8 +38,8 @@ public class BulletController : MonoBehaviour
         } else if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
-            PhotonNetwork.Destroy(other.gameObject);
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(other.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -123,7 +123,7 @@ public class BulletController : MonoBehaviour
         yield return new WaitForSeconds(time);
         _animation.Play("FadeOut");
         yield return new WaitForSeconds(0.6f);
-        PhotonNetwork.Destroy(gameObject);
+        Destroy(gameObject);
     }
     
 }

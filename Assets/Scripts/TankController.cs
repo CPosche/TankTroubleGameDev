@@ -111,14 +111,14 @@ public class TankController : MonoBehaviour
             _ => ammoSprites[2]
         };
     }
-
+    
     private void Shoot()
     {
         if (_bullets.Count >= numberOfBullets) return;
         audioSources[0].Play();
         StartCoroutine(Recoil());
         var smokeEffect = PhotonNetwork.Instantiate(smoke.name, muzzle.transform.position, muzzle.transform.rotation);
-        StartCoroutine(DestroySmoke(smoke));
+        StartCoroutine(DestroySmoke(smokeEffect));
         var bullet = PhotonNetwork.Instantiate(bulletPrefab.name, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
@@ -140,9 +140,9 @@ public class TankController : MonoBehaviour
         _tankHouse.transform.position += _tankHouse.transform.right * 0.05f;
     }
     
-    private IEnumerator DestroySmoke(GameObject Smoke)
+    private IEnumerator DestroySmoke(GameObject smoke)
     {
         yield return new WaitForSeconds(1f);
-        PhotonNetwork.Destroy(Smoke);
+        PhotonNetwork.Destroy(smoke);
     }
 }
