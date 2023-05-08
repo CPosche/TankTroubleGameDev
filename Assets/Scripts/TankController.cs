@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class TankController : MonoBehaviour
 {
-    
     [SerializeField] private GameObject muzzle;
     [SerializeField] private GameObject smoke;
     public int numberOfBullets = 5;
@@ -31,7 +30,7 @@ public class TankController : MonoBehaviour
     public AudioSource[] audioSources;
     private Rigidbody2D _rigidbody2D;
     public int maxHealth = 5;
-    private int currentHealth;
+    private int _currentHealth;
     public Image healthImage;
 
     // Start is called before the first frame update
@@ -45,7 +44,7 @@ public class TankController : MonoBehaviour
         _tankTransform = GetComponent<Transform>();
         _tankController = GetComponent<TankController>();
         bulletText.text = numberOfBullets + "/" + numberOfBullets;
-        currentHealth = maxHealth;
+        _currentHealth = maxHealth;
         healthImage.fillAmount = 1f;
     }
 
@@ -169,11 +168,9 @@ public class TankController : MonoBehaviour
     
     public void TakeDamage()
     {
-        currentHealth -= 1;
-        // find the amount of health to remove
-        var healthToRemove = maxHealth - currentHealth;
-        healthImage.fillAmount = currentHealth / (float)maxHealth;
-        if (currentHealth <= 0)
+        _currentHealth -= 1;
+        healthImage.fillAmount = _currentHealth / (float)maxHealth;
+        if (_currentHealth <= 0)
         {
             Destroy(gameObject);
         }
