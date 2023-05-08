@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class TankController : MonoBehaviour
 {
-    
     [SerializeField] private GameObject muzzle;
     [SerializeField] private GameObject smoke;
     public int numberOfBullets = 5;
@@ -28,10 +28,15 @@ public class TankController : MonoBehaviour
     public Sprite[] ammoSprites;
     private SpriteRenderer _tankHouseSpriteRenderer;
     public AudioSource[] audioSources;
+    private Rigidbody2D _rigidbody2D;
+    public int maxHealth = 5;
+    private int _currentHealth;
+    public Image healthImage;
 
     // Start is called before the first frame update
     void Start()
     {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
         _tankAnimator = GetComponent<Animator>();
         _tankHouse = transform.GetChild(0).gameObject;
         _tankHouseSpriteRenderer = _tankHouse.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
@@ -39,6 +44,8 @@ public class TankController : MonoBehaviour
         _tankTransform = GetComponent<Transform>();
         _tankController = GetComponent<TankController>();
         bulletText.text = numberOfBullets + "/" + numberOfBullets;
+        _currentHealth = maxHealth;
+        healthImage.fillAmount = 1f;
     }
 
     // Update is called once per frame
@@ -48,12 +55,19 @@ public class TankController : MonoBehaviour
         
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
+        
+        // use rigidbpdy2d to move the tank
+        _rigidbody2D.velocity = _tankTransform.right * (vertical * moveSpeed);
+        _rigidbody2D.angularVelocity = -horizontal * rotationSpeed;
 
-        var movement = _tankTransform.right * (vertical * moveSpeed * Time.deltaTime);
-        _tankTransform.position += movement;
-
-        var rotation = -horizontal * rotationSpeed * Time.deltaTime;
-        _tankTransform.Rotate(0, 0, rotation);
+        // var horizontal = Input.GetAxis("Horizontal");
+        // var vertical = Input.GetAxis("Vertical");
+        //
+        // var movement = _tankTransform.right * (vertical * moveSpeed * Time.deltaTime);
+        // _tankTransform.position += movement;
+        //
+        // var rotation = -horizontal * rotationSpeed * Time.deltaTime;
+        // _tankTransform.Rotate(0, 0, rotation);
         
         // if tank is moving then play the animation
         if (horizontal != 0 || vertical != 0)
@@ -111,18 +125,17 @@ public class TankController : MonoBehaviour
             _ => ammoSprites[2]
         };
     }
-
+    
     private void Shoot()
     {
         if (_bullets.Count >= numberOfBullets) return;
         audioSources[0].Play();
         StartCoroutine(Recoil());
         var smokeEffect = PhotonNetwork.Instantiate(smoke.name, muzzle.transform.position, muzzle.transform.rotation);
-        StartCoroutine(DestroySmoke(smoke));
+        StartCoroutine(DestroySmoke(smokeEffect));
         var bullet = PhotonNetwork.Instantiate(bulletPrefab.name, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
-        bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
-        bulletImages[numberOfBullets - _bullets.Count].enabled = false;
+        _photonView.RPC("UpdateTankUi", RpcTarget.All);
     }
     
     // on destroy play animation and destroy the tank
@@ -132,7 +145,7 @@ public class TankController : MonoBehaviour
         explosion.gameObject.GetComponent<Animator>().Play("tank_explosion");
         Destroy(explosion, 1f);
     }
-    
+
     // move the tankhouse back a little to simulate recoil
     private IEnumerator Recoil(){
         _tankHouse.transform.position += _tankHouse.transform.right * -0.05f;
@@ -140,9 +153,26 @@ public class TankController : MonoBehaviour
         _tankHouse.transform.position += _tankHouse.transform.right * 0.05f;
     }
     
-    private IEnumerator DestroySmoke(GameObject Smoke)
+    private IEnumerator DestroySmoke(GameObject smoke)
     {
         yield return new WaitForSeconds(1f);
-        PhotonNetwork.Destroy(Smoke);
+        PhotonNetwork.Destroy(smoke);
+    }
+    
+    [PunRPC]
+    private void UpdateTankUi()
+    {
+        bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
+        bulletImages[numberOfBullets - _bullets.Count].enabled = false;
+    }
+    
+    public void TakeDamage()
+    {
+        _currentHealth -= 1;
+        healthImage.fillAmount = _currentHealth / (float)maxHealth;
+        if (_currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
