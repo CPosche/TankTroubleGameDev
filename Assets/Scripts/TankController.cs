@@ -159,6 +159,17 @@ public class TankController : MonoBehaviour
         PhotonNetwork.Destroy(smoke);
     }
     
+    private void OnTriggerEnter2D(Collider2D other) {
+         if (other.CompareTag("HealthPack"))
+        {
+            // Restore the player's health to maximum
+            _currentHealth = maxHealth;
+
+            // Destroy the health pack object
+            Destroy(other.gameObject);
+        }
+    }
+    
     [PunRPC]
     private void UpdateTankUi()
     {

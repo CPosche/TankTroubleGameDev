@@ -2,7 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class MazeManagerScript : MonoBehaviour
+public class MazeManagerScript : MonoBehaviourPun
 {
     public GameObject maze1;
     public GameObject maze2;
@@ -24,11 +24,11 @@ public class MazeManagerScript : MonoBehaviour
         randomIndex = 0;
         if (randomIndex == 0)
         {
-            Instantiate(maze1, Vector3.zero, Quaternion.identity);
+            PhotonNetwork.Instantiate(maze1.name, Vector3.zero, Quaternion.identity);
         }
         else
         {
-            Instantiate(maze2, Vector3.zero, Quaternion.identity);
+            PhotonNetwork.Instantiate(maze2.name, Vector3.zero, Quaternion.identity);
         }
     }
 }
