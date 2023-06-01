@@ -175,11 +175,11 @@ public class TankController : MonoBehaviour
             
             if (Input.GetAxis("Vertical") > 0)
             {
-                _tankTransform.position += _tankTransform.right * -0.1f;
+                _tankTransform.position += _tankTransform.right * -0.5f;
             }
             else
             {
-                _tankTransform.position += _tankTransform.right * 0.1f;
+                _tankTransform.position += _tankTransform.right * 0.5f;
             }
             
 
