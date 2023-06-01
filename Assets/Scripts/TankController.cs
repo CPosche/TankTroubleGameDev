@@ -186,6 +186,12 @@ public class TankController : MonoBehaviour
         }
     }
 
+            private void UpdateTankUi()
+    {
+        bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
+        bulletImages[numberOfBullets - _bullets.Count].enabled = false;
+    }
+
     public void TakeDamage()
     {
         _currentHealth -= 1;
