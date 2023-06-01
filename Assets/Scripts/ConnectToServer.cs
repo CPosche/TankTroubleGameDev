@@ -21,6 +21,11 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to master");
+        Invoke("JoinLobbyWithDelay", 3f); // Call JoinLobbyWithDelay method after 5 seconds
+    }
+
+    private void JoinLobbyWithDelay()
+    {
         PhotonNetwork.JoinLobby();
     }
 
