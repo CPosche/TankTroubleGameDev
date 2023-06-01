@@ -58,17 +58,17 @@ public class TankController : MonoBehaviour
         var vertical = Input.GetAxis("Vertical");
         
         // use rigidbpdy2d to move the tank
-        _rigidbody2D.velocity = _tankTransform.right * (vertical * moveSpeed);
-        _rigidbody2D.angularVelocity = -horizontal * rotationSpeed;
+        // _rigidbody2D.velocity = _tankTransform.right * (vertical * moveSpeed);
+        // _rigidbody2D.angularVelocity = -horizontal * rotationSpeed;
 
         // var horizontal = Input.GetAxis("Horizontal");
         // var vertical = Input.GetAxis("Vertical");
-        //
-        // var movement = _tankTransform.right * (vertical * moveSpeed * Time.deltaTime);
-        // _tankTransform.position += movement;
-        //
-        // var rotation = -horizontal * rotationSpeed * Time.deltaTime;
-        // _tankTransform.Rotate(0, 0, rotation);
+        
+        var movement = _tankTransform.right * (vertical * moveSpeed * Time.deltaTime);
+        _tankTransform.position += movement;
+        
+        var rotation = -horizontal * rotationSpeed * Time.deltaTime;
+        _tankTransform.Rotate(0, 0, rotation);
         
         // if tank is moving then play the animation
         if (horizontal != 0 || vertical != 0)
@@ -136,7 +136,7 @@ public class TankController : MonoBehaviour
         StartCoroutine(DestroySmoke(smokeEffect));
         var bullet = PhotonNetwork.Instantiate(bulletPrefab.name, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
-        _photonView.RPC("UpdateTankUi", RpcTarget.All);
+        UpdateTankUi();
     }
     
     // on destroy play animation and destroy the tank
@@ -159,14 +159,33 @@ public class TankController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         PhotonNetwork.Destroy(Smoke);
     }
-    
-    [PunRPC]
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Wall"))
+        {
+            // make the tank bounce back a little using transform depending if its driving backwards or forwards
+            
+            
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                _tankTransform.position += _tankTransform.right * -0.1f;
+            }
+            else
+            {
+                _tankTransform.position += _tankTransform.right * 0.1f;
+            }
+            
+
+        }
+    }
+
     private void UpdateTankUi()
     {
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
         bulletImages[numberOfBullets - _bullets.Count].enabled = false;
     }
-    
+
     public void TakeDamage()
     {
         currentHealth -= 1;
