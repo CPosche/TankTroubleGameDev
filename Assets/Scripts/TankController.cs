@@ -193,9 +193,9 @@ public class TankController : MonoBehaviourPun
         bulletImages[numberOfBullets - _bullets.Count].enabled = false;
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int damageToTake)
     {
-        _currentHealth -= 1;
+        _currentHealth -= damageToTake;
         healthImage.fillAmount = _currentHealth / (float)maxHealth;
         if (_currentHealth <= 0)
         {
