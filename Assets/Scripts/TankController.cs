@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class TankController : MonoBehaviour
+public class TankController : MonoBehaviourPun
 {
     [SerializeField] private GameObject muzzle;
     [SerializeField] private GameObject smoke;
@@ -135,7 +135,7 @@ public class TankController : MonoBehaviour
         StartCoroutine(DestroySmoke(smokeEffect));
         var bullet = PhotonNetwork.Instantiate(bulletPrefab.name, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
-        UpdateTankUi();
+        _photonView.RPC("UpdateTankUi", RpcTarget.All);
     }
     
     // on destroy play animation and destroy the tank
@@ -186,7 +186,8 @@ public class TankController : MonoBehaviour
         }
     }
 
-            private void UpdateTankUi()
+    [PunRPC]
+    private void UpdateTankUi()
     {
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
         bulletImages[numberOfBullets - _bullets.Count].enabled = false;
