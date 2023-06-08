@@ -37,11 +37,11 @@ public class BulletController : MonoBehaviourPun
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
             _photonView.RPC("CalculateNewDirection", RpcTarget.All, other);
-            // CalculateNewDirection(other);
+                // CalculateNewDirection(other);
         } else if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
-            other.gameObject.GetComponent<TankController>().TakeDamage();
+            other.gameObject.GetComponent<TankController>().TakeDamage(1);
             PhotonNetwork.Destroy(gameObject);
         }
     }
