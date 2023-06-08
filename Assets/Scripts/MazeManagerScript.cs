@@ -20,10 +20,20 @@ public class MazeManagerScript : MonoBehaviourPun
     }
     private void Awake()
     {
-        if (!photonView.AmOwner) return;
-        var randomIndex = Random.Range(0, 2);
-        Debug.Log(randomIndex);
-        if (randomIndex == 0)
+        // only instantiate a maze if we are the master client
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CreateMaze();
+        }
+        
+    }
+    
+    private void CreateMaze()
+    {
+        // choose a random number between 1 and 2
+        int mazeNumber = Random.Range(0, 2);
+        // instantiate the chosen maze
+        if (mazeNumber == 0)
         {
             PhotonNetwork.Instantiate(maze1.name, Vector3.zero, Quaternion.identity);
         }
