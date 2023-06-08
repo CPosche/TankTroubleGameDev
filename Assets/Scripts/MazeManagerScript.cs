@@ -21,7 +21,6 @@ public class MazeManagerScript : MonoBehaviourPun
     private void Awake() {
          int randomIndex = Random.Range(0, 2);
         Debug.Log(randomIndex);
-        randomIndex = 0;
         if (randomIndex == 0)
         {
             PhotonNetwork.Instantiate(maze1.name, Vector3.zero, Quaternion.identity);
