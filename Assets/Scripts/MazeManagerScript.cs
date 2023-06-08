@@ -18,8 +18,10 @@ public class MazeManagerScript : MonoBehaviourPun
 
         PhotonNetwork.ConnectUsingSettings();
     }
-    private void Awake() {
-         int randomIndex = Random.Range(0, 2);
+    private void Awake()
+    {
+        if (!photonView.AmOwner) return;
+        var randomIndex = Random.Range(0, 2);
         Debug.Log(randomIndex);
         if (randomIndex == 0)
         {
