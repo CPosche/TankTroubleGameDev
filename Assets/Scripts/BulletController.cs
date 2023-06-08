@@ -5,13 +5,14 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Photon.Pun;
 
-public class BulletController : MonoBehaviour
+public class BulletController : MonoBehaviourPun
 {
 
     public float bulletSpeed = 2f;
     public float bulletLifeTime = 5f;
     private Transform _transform;
     private Animation _animation;
+    private PhotonView _photonView;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class BulletController : MonoBehaviour
     {
         _transform = GetComponent<Transform>();
         _animation = GetComponent<Animation>();
+        _photonView = GetComponent<PhotonView>();
     }
 
     private void Update()
@@ -34,7 +36,8 @@ public class BulletController : MonoBehaviour
         if (other.gameObject.CompareTag("Wall"))
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
-            CalculateNewDirection(other);    
+            _photonView.RPC("CalculateNewDirection", RpcTarget.All, other);
+            // CalculateNewDirection(other);
         } else if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
@@ -43,6 +46,7 @@ public class BulletController : MonoBehaviour
         }
     }
 
+    [PunRPC]
     private void CalculateNewDirection([NotNull] Collider2D other)
     {
         // var normal = surfaceHit.transform.right;
