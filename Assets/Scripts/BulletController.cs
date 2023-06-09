@@ -36,8 +36,8 @@ public class BulletController : MonoBehaviourPun
         if (other.gameObject.CompareTag("Wall"))
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);
-            _photonView.RPC("CalculateNewDirection", RpcTarget.All, other);
-                // CalculateNewDirection(other);
+            //_photonView.RPC("CalculateNewDirection", RpcTarget.All, other);
+                 CalculateNewDirection(other);
         } else if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log(other.gameObject.name + " was hit by " + name);

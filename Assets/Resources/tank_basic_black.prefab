@@ -447,6 +447,7 @@ MonoBehaviour:
   moveSpeed: 3
   rotationSpeed: 200
   explosionPrefab: {fileID: 6786038701419380067, guid: b023b41753d783e4d8c94c28ccf877e0, type: 3}
+  bulletSpawner: {fileID: 3475940162525257957, guid: 81b39e834bf96b94681e2a6574ec2f2f, type: 3}
   bulletText: {fileID: 1541689168337822561}
   bulletImages:
   - {fileID: 8242644382841206884}

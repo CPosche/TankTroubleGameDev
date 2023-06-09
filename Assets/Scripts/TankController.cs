@@ -17,6 +17,7 @@ public class TankController : MonoBehaviourPun
     public float moveSpeed = 3f;
     public float rotationSpeed = 200f;
     public GameObject explosionPrefab;
+    public GameObject bulletSpawner;
 
     private Transform _tankTransform;
     private TankController _tankController;
@@ -46,6 +47,7 @@ public class TankController : MonoBehaviourPun
         bulletText.text = numberOfBullets + "/" + numberOfBullets;
         _currentHealth = maxHealth;
         healthImage.fillAmount = 1f;
+
     }
 
     // Update is called once per frame
@@ -133,9 +135,25 @@ public class TankController : MonoBehaviourPun
         StartCoroutine(Recoil());
         var smokeEffect = PhotonNetwork.Instantiate(smoke.name, muzzle.transform.position, muzzle.transform.rotation);
         StartCoroutine(DestroySmoke(smokeEffect));
-        var bullet = PhotonNetwork.Instantiate(bulletPrefab.name, muzzle.transform.position, muzzle.transform.rotation);
-        _bullets.Add(bullet);
-        _photonView.RPC("UpdateTankUi", RpcTarget.All);
+        GameObject bullet = null;
+        // foreach child in bulletspawner
+        foreach (Transform child in bulletSpawner.transform)
+        {
+            if (child.gameObject.activeSelf) continue;
+            bullet = child.gameObject;
+            break;
+        }
+        // set bullets transform to the muzzle position
+        if (bullet != null)
+        {
+            bullet.transform.position = muzzle.transform.position;
+            // set bullets rotation to the muzzle rotation
+            bullet.transform.rotation = muzzle.transform.rotation;
+            // set bullet to active
+            bullet.GetComponent<Transform>().gameObject.SetActive(true);
+            _bullets.Add(bullet);
+        }
+        // _photonView.RPC("UpdateTankUi", RpcTarget.All);
     }
     
     // on destroy play animation and destroy the tank
