@@ -135,7 +135,7 @@ public class TankController : MonoBehaviourPun
         StartCoroutine(DestroySmoke(smokeEffect));
         var bullet = PhotonNetwork.Instantiate(bulletPrefab.name, muzzle.transform.position, muzzle.transform.rotation);
         _bullets.Add(bullet);
-        _photonView.RPC("UpdateTankUi", RpcTarget.All);
+        UpdateTankUi();
     }
     
     // on destroy play animation and destroy the tank
@@ -185,8 +185,7 @@ public class TankController : MonoBehaviourPun
 
         }
     }
-
-    [PunRPC]
+    
     private void UpdateTankUi()
     {
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
