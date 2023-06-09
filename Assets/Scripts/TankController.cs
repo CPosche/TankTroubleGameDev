@@ -188,6 +188,7 @@ public class TankController : MonoBehaviourPun
     
     private void UpdateTankUi()
     {
+        if(_bullets.Count > numberOfBullets) return;
         bulletText.text = numberOfBullets - _bullets.Count + "/" + numberOfBullets;
         bulletImages[numberOfBullets - _bullets.Count].enabled = false;
     }
