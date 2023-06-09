@@ -25,7 +25,6 @@ public class MazeManagerScript : MonoBehaviourPun
         {
             CreateMaze();
         }
-        
     }
     
     private void CreateMaze()
